@@ -16,6 +16,7 @@
 
 package com.android.launcher2;
 
+import android.widget.Toast;
 import android.widget.ImageView;
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -23,6 +24,7 @@ import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.graphics.Rect;
+import android.os.Handler;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.animation.TranslateAnimation;
@@ -53,6 +55,7 @@ public class DeleteZone extends ImageView implements DropTarget, DragController.
     private int mOrientation;
     private DragController mDragController;
 
+    private Handler mHandler = new Handler();
     private final RectF mRegion = new RectF();
     private TransitionDrawable mTransition;
     private View mHandle;
@@ -125,6 +128,7 @@ public class DeleteZone extends ImageView implements DropTarget, DragController.
     public void onDragEnter(DragSource source, int x, int y, int xOffset, int yOffset,
             DragView dragView, Object dragInfo) {
         mTransition.reverseTransition(TRANSITION_DURATION);
+	mHandler.postDelayed(mDisplayToast, 500);
         dragView.setPaint(mTrashPaint);
     }
 
@@ -254,4 +258,11 @@ public class DeleteZone extends ImageView implements DropTarget, DragController.
             return false;
         }
     }
+
+    private Runnable mDisplayToast = new Runnable() {
+        public void run() {
+	    CharSequence msg="Drop to remove";
+	    Toast.makeText(mContext, msg, 500).show();
+        }
+    };
 }
